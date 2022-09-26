@@ -1,0 +1,14 @@
+{% extends 'main.html' %}
+
+{% block title %}Log-in{% endblock %}
+{% block content %}
+
+        <h1>Вход</h1>
+        <p>Пожалуйста, используйте следующую форму для входа:</p>
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Вход</button>
+        </form>
+
+{% endblock content %}

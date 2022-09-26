@@ -1,0 +1,15 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+    <h1> Обновление событий</h1>
+    <br/>
+    <form action="" method=POST>
+        {% csrf_token %}
+        {{ form.as_p }}
+        
+        <button type="submit" class="btn btn_secondary">Обновить</button>
+    </form>
+    
+  
+{% endblock %}

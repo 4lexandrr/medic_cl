@@ -1,23 +1,23 @@
 {% extends 'main.html' %}
 
-
 {% block content %}
 
-<h1>Home Template</h1>
-
-
-<div>
+    <h1>Домашняя страница</h1>
 
     <div>
-        {% for page in pages %}
 
         <div>
-            <h5>{{page.id}} -- <a href="/page/{{page.id}}">{{page.name}}</a></h5>
+            <a href="{% url 'personal' %}">Личный кабинет</a>
         </div>
-        
-        {% endfor %}
-    </div>
 
-</div>
+        <div>
+            <a href="{% url 'add-venue' %}">Добавить адрес</a>
+        </div>
+
+        <div>
+            <a href="{% url 'all-venue' %}">Посмотреть адреса</a>
+        </div>
+
+    </div>
 
 {% endblock %}
