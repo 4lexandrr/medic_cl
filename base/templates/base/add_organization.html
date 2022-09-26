@@ -1,0 +1,22 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+    <h1> Добавление адрес</h1>
+    <hr>
+    <form action="" method=POST>
+    
+    {% if submitted %}
+        Адрес успешно добавлено!
+
+    {% else %}
+        {% csrf_token %}
+
+        {{ form.as_p}}
+        <button type="submit" class="btn btn-outline-success"> Добавить </button>
+
+    {% endif %}
+
+    </form> 
+
+{% endblock %}

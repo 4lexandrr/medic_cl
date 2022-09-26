@@ -1,0 +1,22 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+    <h1>Доступные адреса</h1>
+    <hr>
+    
+    {% for venue in venue_list %}
+        <strong>{{ venue }} </strong>
+        <div style="text-align: right;"><a href="{% url 'update-venue' venue.id %}" class="btn btn-outline-secondary btn-sm"> Обновить </a></div>
+        <div style="text-align: right;"><a href="{% url 'delete-venue' venue.id %}" class="btn btn-outline-danger btn-sm"> Удалить </a></div>
+        <ul>
+
+            <li>Адрес: {{ venue.address }}</li>
+            <li>Индекс: {{ venue.zip_code }}</li>
+            <li>Контактный номер: {{ venue.phone }}</li>
+            
+        </ul>
+
+    {% endfor %}
+
+{% endblock %}

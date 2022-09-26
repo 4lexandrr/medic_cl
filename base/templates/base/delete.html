@@ -1,0 +1,20 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<form class="form" method="POST" action="">
+    {% csrf_token %}
+    <div>
+        <br/>
+        <h5> Вы уверены, что Вы хотите удалить запись - "{{obj}}" ?</h5>
+        <br/>
+    </div>
+
+    <div>
+        <button type="submit" class="btn btn-danger"> Удалить </button>
+        <a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary" tabindex="-1" role="button" aria-disabled="true">Назад</a>
+    </div>
+
+</form>
+
+{% endblock %}

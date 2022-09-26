@@ -1,0 +1,26 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+    <h1>Записи</h1>
+    {% for event in event_list %}
+        <strong>Событие: {{ event }} </strong>
+        <div style="text-align: right;"><a href="{% url 'update-events' event.id %}" class="btn btn-outline-secondary btn-sm"> Обновить </a></div>
+        <div style="text-align: right;"><a href="{% url 'delete-events' event.id %}" class="btn btn-outline-danger btn-sm"> Удалить </a></div>
+        <ul>
+
+            <li>Дата: {{ event.event_date }}</li>
+            <li>Место проведения: {{ event.venue}}, {{ event.venue.address }}, {{ event.venue.phone }}</li>
+            <li>Работник: {{ event.docror }}</li>
+            <li>Описание: {{ event.description }}</li>
+            <li>Участник:
+                {% for user in event.attendes.all %}
+                    {{ user }} 
+            </li>
+                {% endfor %}
+            
+        </ul>
+
+    {% endfor %}
+
+{% endblock %}
