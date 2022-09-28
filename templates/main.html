@@ -9,14 +9,6 @@
   <body>
     {% include 'navigatbar.html' %}
     
-    {% if messages %}
-      <ul class="messages">
-        {% for message in messages %}
-        <li></li>{{ message }}</li>
-          {% endfor %}
-    
-    </ul>
-    {% endif %}
 
     <div class="container">
 
@@ -24,6 +16,17 @@
 
 
     {% endblock %}
+
+    <div>
+    {% if messages %}
+      <h5 class="messages">
+        {% for message in messages %}
+        {{ message }}
+        {% endfor %}
+    
+      </h5>
+    {% endif %}
+    </div>
     
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>

@@ -1,6 +1,7 @@
 import imp
 from unicodedata import name
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -20,7 +21,7 @@ def all_venue(request):
     context = {'venue_list': venue_list}
     return render(request, 'base/organization.html', context)
 
-
+@login_required(login_url='login')
 def add_venue(request):
     submitted = False
     if request.method == 'POST':
@@ -37,6 +38,7 @@ def add_venue(request):
     return render(request, 'base/add_organization.html', {'form': form, 'submitted': submitted})
 
 
+@login_required(login_url='login')
 def update_venue(request, venue_id):
     venue = Venue.objects.get(pk=venue_id)
     form = VenueForm(request.POST or None, instance=venue)
@@ -49,6 +51,7 @@ def update_venue(request, venue_id):
     return render(request, 'base/update_organization.html', context)
 
 
+@login_required(login_url='login')
 def delete_venue(request, venue_id):
     venue = Venue.objects.get(pk=venue_id)
     context = {'obj': venue}
@@ -59,28 +62,7 @@ def delete_venue(request, venue_id):
     return render(request, 'base/delete.html', context)
 
 
-def delete_events(request, event_id):
-    event = Events.objects.get(pk=event_id)
-    context = {'obj': event}
-    if request.method == 'POST':
-        event.delete()
-        return redirect('list-events')
-
-    return render(request, 'base/delete.html', context)
-
-def update_events(request, event_id):
-    event = Events.objects.get(pk=event_id)
-    form = EventForm(request.POST or None, instance=event)
-    context = {'event': event, 'form': form}
-
-    if form.is_valid():
-        form.save()
-        return redirect('list-events')
-
-    return render(request, 'base/update_events.html', context)
-
-
-
+@login_required(login_url='login')
 def add_events(request):
     submitted = False
     if request.method == 'POST':
@@ -95,6 +77,30 @@ def add_events(request):
             submitted = True
 
     return render(request, 'base/add_events.html', {'form': form, 'submitted': submitted})
+
+
+@login_required(login_url='login')
+def update_events(request, event_id):
+    event = Events.objects.get(pk=event_id)
+    form = EventForm(request.POST or None, instance=event)
+    context = {'event': event, 'form': form}
+
+    if form.is_valid():
+        form.save()
+        return redirect('list-events')
+
+    return render(request, 'base/update_events.html', context)
+
+
+@login_required(login_url='login')
+def delete_events(request, event_id):
+    event = Events.objects.get(pk=event_id)
+    context = {'obj': event}
+    if request.method == 'POST':
+        event.delete()
+        return redirect('list-events')
+
+    return render(request, 'base/delete.html', context)
 
     
 def personal(request):
@@ -121,6 +127,11 @@ def user_login(request):
         form = LoginForm()
         
     return render(request, 'base/login_register.html', {'form': form})
+
+
+def logoutUser(request):
+    logout(request)
+    return redirect('home')
 
 
 def home(request):
