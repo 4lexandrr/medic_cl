@@ -8,7 +8,7 @@ from .models import Venue
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
-
+    
 
 class VenueForm(ModelForm):
     ''' Создаём класс VenueForm для отображения формы на сайте '''

@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from .forms import LoginForm
 from .models import Client, Venue
@@ -14,6 +15,10 @@ from .forms import VenueForm
 # Create your views here.
 
 from django.http import HttpResponse
+
+
+def home(request):
+    return render(request, 'base/home.html')
 
 
 def all_venue(request):
@@ -63,6 +68,13 @@ def delete_venue(request, venue_id):
 
 
 @login_required(login_url='login')
+def all_events(request):
+    event_list = Events.objects.all()
+    context = {'event_list': event_list}
+    return render(request, 'base/events_list.html', context)
+
+
+@login_required(login_url='login')
 def add_events(request):
     submitted = False
     if request.method == 'POST':
@@ -103,13 +115,18 @@ def delete_events(request, event_id):
     return render(request, 'base/delete.html', context)
 
     
-def personal(request):
-    profile = Client.objects.all()
-    context = {'profile': profile}
-    return render(request, 'base/personal_cab.html', context)
+def UserProfile(request, pk):
+    user = User.objects.get(id=pk)
+    context = {'user': user}
+    return render(request, 'base/user_profile.html', context)
 
 
 def user_login(request):
+    page = 'login'
+
+    if request.user.is_authenticated:
+        return redirect('home')
+
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -126,7 +143,7 @@ def user_login(request):
     else:
         form = LoginForm()
         
-    return render(request, 'base/login_register.html', {'form': form})
+    return render(request, 'base/login_register.html', {'form': form, 'page': page})
 
 
 def logoutUser(request):
@@ -134,14 +151,23 @@ def logoutUser(request):
     return redirect('home')
 
 
-def home(request):
-    return render(request, 'base/home.html')
+def registerPage(request):
+    form = UserCreationForm()
+
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, 'Недопустимый логин и/или пароль')
+    return render(request, 'base/login_register.html', {'form': form}) 
 
 
-def all_events(request):
-    event_list = Events.objects.all()
-    context = {'event_list': event_list}
-    return render(request, 'base/events_list.html', context)
+
 
 
 

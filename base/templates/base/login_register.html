@@ -3,6 +3,8 @@
 {% block title %}Log-in{% endblock %}
 {% block content %}
 
+{% if page == 'login' %}
+    <br>
         <h1>Вход</h1>
         <p>Пожалуйста, используйте следующую форму для входа:</p>
         <form action="" method="POST">
@@ -10,5 +12,28 @@
             {{ form.as_p }}
             <button type="submit">Вход</button>
         </form>
+        <p> Ещё не зарегистрированы? </p>
+        <a href="{% url 'register' %}"> Зарегистрироваться </a>
+    </br>
+    </div>
+
+{% else %}
+    <div>
+    <br>
+        <h1>Регистрация</h1>
+        <p>Пожалуйста, используйте следующую форму для регистрации:</p>
+        <form action="" method="POST">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+            <button type="submit">Регистрация</button>
+        </form>
+    </br>
+        <p> Уже зарегистрированы? </p>
+        <a href="{% url 'login' %}">Вход</a>
+    </div>
+
+{% endif %}
+
 
 {% endblock content %}

@@ -3,11 +3,13 @@
 {% block content %}
 
     <h1>Домашняя страница</h1>
-
+    {% if request.user.is_authenticated %}
+    <p> Привет {{request.user}}</p>
+    {% endif %}
     <div>
 
         <div>
-            <a href="{% url 'personal' %}">Личный кабинет</a>
+            <a href="{% url 'user-profile' user.id %}">Личный кабинет</a>
         </div>
 
         <div>
