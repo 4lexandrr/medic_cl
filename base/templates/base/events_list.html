@@ -3,10 +3,15 @@
 {% block content %}
 
     <h1>Записи</h1>
+    <hr>
     {% for event in event_list %}
         <strong>Событие: {{ event }} </strong>
+        {% if request.user.type != 'USER' %}
         <div style="text-align: right;"><a href="{% url 'update-events' event.id %}" class="btn btn-outline-secondary btn-sm"> Обновить </a></div>
         <div style="text-align: right;"><a href="{% url 'delete-events' event.id %}" class="btn btn-outline-danger btn-sm"> Удалить </a></div>
+        {% else %}
+        <div style="text-align: right;"><a href="{% url 'delete-events' event.id %}" class="btn btn-outline-primary btn-sm"> Записаться </a></div>
+        {% endif %}
         <ul>
 
             <li>Дата: {{ event.event_date }}</li>
@@ -14,7 +19,7 @@
             <li>Работник: {{ event.docror }}</li>
             <li>Описание: {{ event.description }}</li>
             <li>Участник:
-                {% for user in event.attendes.all %}
+                {% for user in events.attendes.all %}
                     {{ user }} 
             </li>
                 {% endfor %}

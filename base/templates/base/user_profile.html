@@ -4,8 +4,28 @@
 
 <div>
     <br>
-    <h1>{{ user.username}}</h1>
+    <h1>{{ user }}, {{user.years}} г. </h1>
     <hr>
+    <div style="text-align: right;"><a href="{% url 'update-profile' user.id %}" class="btn btn-outline-secondary btn-sm"> Обновить </a></div>
+    <div>
+        <h4> Медицинский полис: </h4>
+        <h5> {{ user.polis }} </h5>
+    </div>
+    <br>
+    <div>
+        <h4> Контактный номер: </h4>
+        <h5> {{ user.mobile_phone }}</h5>
+    </div>
+    <br>
+    <div>
+        <h4> Электронная почта: </h4>
+        <h5> {{ user.email }}</h5>
+    </div>
+    <br>
+    <div>
+        <h4> Адрес регистрации: </h4>
+        <h5> {{ user.registration_address }}</h5>
+    </div>
 </div>
 
 {% endblock %}

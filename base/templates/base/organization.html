@@ -7,8 +7,10 @@
     
     {% for venue in venue_list %}
         <strong>{{ venue }} </strong>
+        {% if request.user.type != 'USER' %}
         <div style="text-align: right;"><a href="{% url 'update-venue' venue.id %}" class="btn btn-outline-secondary btn-sm"> Обновить </a></div>
         <div style="text-align: right;"><a href="{% url 'delete-venue' venue.id %}" class="btn btn-outline-danger btn-sm"> Удалить </a></div>
+        {% endif %}
         <ul>
 
             <li>Адрес: {{ venue.address }}</li>

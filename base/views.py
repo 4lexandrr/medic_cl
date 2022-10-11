@@ -1,20 +1,12 @@
-import imp
-from unicodedata import name
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
-from django.http import HttpResponseRedirect
-from .forms import LoginForm
-from .models import Client, Venue
-from .models import Events
-from .forms import EventForm
-from .forms import VenueForm
+from django.http import HttpResponse, HttpResponseRedirect
+from .models import Venue, Events, User, Tests
+from .forms import EventForm, VenueForm, MyUserCreationForm, ProfileForm, TestForm
 # Create your views here.
-
-from django.http import HttpResponse
 
 
 def home(request):
@@ -25,6 +17,7 @@ def all_venue(request):
     venue_list = Venue.objects.all()
     context = {'venue_list': venue_list}
     return render(request, 'base/organization.html', context)
+
 
 @login_required(login_url='login')
 def add_venue(request):
@@ -114,11 +107,72 @@ def delete_events(request, event_id):
 
     return render(request, 'base/delete.html', context)
 
-    
+
+def all_tests(request):
+    test_list = Tests.objects.all()
+    context = {'test_list': test_list}
+    return render(request, 'base/all_tests.html', context)
+
+
+@login_required(login_url='login')
+def add_test(request):
+    submitted = False
+    if request.method == 'POST':
+        form = TestForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/add_test?submitted=True')
+
+    else:
+        form = TestForm
+        if 'submitted' in request.GET:
+            submitted = True
+
+    return render(request, 'base/add_test.html', {'form': form, 'submitted': submitted})
+
+
+@login_required(login_url='login')
+def update_test(request, test_id):
+    test = Tests.objects.get(pk=test_id)
+    form = TestForm(request.POST or None, instance=test)
+    context = {'event': test, 'form': form}
+
+    if form.is_valid():
+        form.save()
+        return redirect('all-tests')
+
+    return render(request, 'base/update_test.html', context)
+
+
+@login_required(login_url='login')
+def delete_test(request, test_id):
+    test = Events.objects.get(pk=test_id)
+    context = {'obj': test}
+    if request.method == 'POST':
+        test.delete()
+        return redirect('all-tests')
+
+    return render(request, 'base/delete.html', context)
+
+
+@login_required(login_url='login')
 def UserProfile(request, pk):
     user = User.objects.get(id=pk)
     context = {'user': user}
     return render(request, 'base/user_profile.html', context)
+
+
+@login_required(login_url='login')
+def update_profile(request, pk):
+    user = User.objects.get(id=pk)
+    form = ProfileForm(request.POST or None, instance=user)
+    context = {'user': user, 'form': form}
+
+    if form.is_valid():
+        form.save()
+        return redirect('home')
+
+    return render(request, 'base/update_profile.html', context)
 
 
 def user_login(request):
@@ -128,22 +182,25 @@ def user_login(request):
         return redirect('home')
 
     if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            user = authenticate(username=cd['username'], password=cd['password'])
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return redirect('home')
-                else:
-                    messages.error(request, 'Неверный логин и/или пароль')
-            else:
-                messages.error(request, 'Неверный логин и/или пароль')
-    else:
-        form = LoginForm()
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        try:
+            user = User.objects.get(email=email)
+        except:
+            messages.error(request, 'User does not exist')
+
         
-    return render(request, 'base/login_register.html', {'form': form, 'page': page})
+        user = authenticate(request, email=email, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, 'Username OR password does not exit')
+
+
+    return render(request, 'base/login_register.html', {'page': page})
 
 
 def logoutUser(request):
@@ -152,10 +209,10 @@ def logoutUser(request):
 
 
 def registerPage(request):
-    form = UserCreationForm()
+    form = MyUserCreationForm()
 
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = MyUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.username = user.username.lower()
@@ -164,9 +221,11 @@ def registerPage(request):
             return redirect('home')
         else:
             messages.error(request, 'Недопустимый логин и/или пароль')
+
     return render(request, 'base/login_register.html', {'form': form}) 
 
 
+    
 
 
 

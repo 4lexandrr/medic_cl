@@ -4,21 +4,23 @@
 
     <h1>Домашняя страница</h1>
     {% if request.user.is_authenticated %}
-    <p> Привет {{request.user}}</p>
+    <p> Здравствуйте,  {{request.user.first_name}}</p>
     {% endif %}
     <div>
-
+<!-- 
         <div>
             <a href="{% url 'user-profile' user.id %}">Личный кабинет</a>
-        </div>
-
+        </div> -->
+        {% if request.user.type != 'USER' %}
         <div>
             <a href="{% url 'add-venue' %}">Добавить адрес</a>
         </div>
+        {% endif %}
 
         <div>
             <a href="{% url 'all-venue' %}">Посмотреть адреса</a>
         </div>
+        
 
     </div>
 
