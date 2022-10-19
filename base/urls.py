@@ -1,5 +1,4 @@
 from argparse import Namespace
-from xml.etree.ElementInclude import include
 from django.urls import path
 from . import views
 
@@ -10,6 +9,8 @@ urlpatterns = [
 
     path('user_profile/<str:pk>/', views.UserProfile, name='user-profile'),
     path('update_profile/<str:pk>/', views.update_profile, name='update-profile'),
+
+    path('doctors/', views.doctors_list, name='doctor-list'),
 
     path('login/', views.user_login, name='login'),
     path('logout/', views.logoutUser, name='logout'),

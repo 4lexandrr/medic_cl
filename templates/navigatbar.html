@@ -19,8 +19,11 @@
               События
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="/events/">Записаться на приём</a></li>
+              <li><a class="dropdown-item" href="/doctors/">Записаться к доктору</a></li>
+              <li><a class="dropdown-item" href="/events/">Записаться на событие</a></li>
+              {% if request.user.type != 'USER' %}
               <li><a class="dropdown-item" href="/add_events/">Добавить событие</a></li>
+              {% endif %}
               <li><hr class="dropdown-divider"></li>
             </ul>
           </li>

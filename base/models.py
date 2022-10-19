@@ -1,14 +1,16 @@
 from dataclasses import Field
 import datetime
-from email.policy import default
+from doctest import DocTestRunner
 from operator import mod
-from pyexpat import model
-from unicodedata import category
+from tabnanny import verbose
+from django.utils import timezone
+from email.policy import default
 from unittest.util import _MAX_LENGTH
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import * 
+
 
 
 # Create your models here.
@@ -37,14 +39,8 @@ def max_value_current_year(value):
 class User(AbstractUser):
     class Types(models.TextChoices):
         USER = 'USER', 'User'
-        DOCTOR = 'DOCTOR', 'Doctor'
         ADMIN = 'ADMIN', 'Admin'
     
-    # DOCKTOR_CHOICES = [
-    #     ('Юзер', 'Пользователь'),
-    #     ('Терапевт', 'Врач-Терапевт'),
-    #     ('Лор', 'Ларингооторинолог')
-    # ]
 
     username = models.CharField(max_length=50, default="Test")
     type = models.CharField(max_length=255, choices=Types.choices, default=Types.USER)
@@ -57,7 +53,6 @@ class User(AbstractUser):
     polis = models.CharField(max_length=16, default="Test")
     mobile_phone = models.CharField(max_length=18, validators=[telephone, MaxLengthValidator], default="Test")
     registration_address = models.CharField(max_length=200, default="Test")
-    # category = models.CharField(max_lenght=255, choices=Types.choices, default='Юзер')
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ['username']
@@ -70,11 +65,6 @@ class User(AbstractUser):
 class UserManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
         return super().get_queryset(*args, **kwargs).filter(type=User.Types.USER)
-
-
-class DoctorManager(models.Manager):
-    def get_queryset(self, *args, **kwargs):
-        return super().get_queryset(*args, **kwargs).filter(type=User.Types.DOCTOR)
 
 
 class AdminManager(models.Manager):
@@ -91,19 +81,6 @@ class Client(User):
     def save(self, *args, **kwargs):
         if not self.pk:
             self.type = User.Types.USER
-        return super().save(*args, **kwargs)
-
-class Doctor(User):
-    objects = DoctorManager()
-
-    class Meta:
-        proxy = True
-    
-
-
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            self.type = User.Types.DOCTOR
         return super().save(*args, **kwargs)
 
 
@@ -171,10 +148,6 @@ class Visits(models.Model):
     description = models.TextField(blank=True)
 
 
-# class Available_time(models.Model):
-#     id = models.ManyToManyField(User)
-#     day = models.DateField()
-#     time = models.TimeField()
-#     availability = models.BooleanField(default=False)
+
 
 

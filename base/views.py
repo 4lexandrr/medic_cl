@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
+from django.views.generic import CreateView
+from django.views.generic import RedirectView
 from .models import Venue, Events, User, Tests
 from .forms import EventForm, VenueForm, MyUserCreationForm, ProfileForm, TestForm
 # Create your views here.
@@ -11,6 +13,12 @@ from .forms import EventForm, VenueForm, MyUserCreationForm, ProfileForm, TestFo
 
 def home(request):
     return render(request, 'base/home.html')
+
+
+def doctors_list(request):
+    doctor_list = User.objects.all().filter(type='DOCTOR')
+    context = {'doctor_list': doctor_list}
+    return render(request, 'base/doctors_list.html', context)
 
 
 def all_venue(request):

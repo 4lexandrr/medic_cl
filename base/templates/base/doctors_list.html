@@ -1,0 +1,13 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+    <h1>Доступные доктора</h1>
+    <hr>
+    <div>
+        {% for doctor in doctor_list %}
+        <h4> {{ doctor.category }}</h4>
+        <h1> {{ doctor }} </h1>
+        {% endfor %}
+    </div>
+{% endblock %}
