@@ -11,6 +11,8 @@ urlpatterns = [
     path('update_profile/<str:pk>/', views.update_profile, name='update-profile'),
 
     path('doctors/', views.doctors_list, name='doctor-list'),
+    path('doctors/<str:id>/', views.reception, name='datetime'),
+    path('doctors/<str:id>/available_time', views.available_time, name='available-time'),
 
     path('login/', views.user_login, name='login'),
     path('logout/', views.logoutUser, name='logout'),
@@ -26,7 +28,7 @@ urlpatterns = [
     path('update_venue/<venue_id>', views.update_venue, name='update-venue'),
     path('delete_venue/<venue_id>', views.delete_venue, name='delete-venue'),
 
-    path('tests/', views.all_tests, name='all-tests'),
+    path('products/', views.cart, name='products'),
     path('add_test/', views.add_test, name='add-test'),
     path('update_test/<test_id>', views.update_test, name='update-test'),
     path('delete_test/<test_id>', views.delete_test, name='delete-test'),

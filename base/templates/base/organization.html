@@ -6,19 +6,28 @@
     <hr>
     
     {% for venue in venue_list %}
-        <strong>{{ venue }} </strong>
-        {% if request.user.type != 'USER' %}
-        <div style="text-align: right;"><a href="{% url 'update-venue' venue.id %}" class="btn btn-outline-secondary btn-sm"> Обновить </a></div>
-        <div style="text-align: right;"><a href="{% url 'delete-venue' venue.id %}" class="btn btn-outline-danger btn-sm"> Удалить </a></div>
-        {% endif %}
-        <ul>
 
-            <li>Адрес: {{ venue.address }}</li>
-            <li>Индекс: {{ venue.zip_code }}</li>
-            <li>Контактный номер: {{ venue.phone }}</li>
-            
-        </ul>
+        <div class="card">
+            <div class="card-header">
+                {{ venue }}
+            </div>
+            <div class="card-body">
+              <p class="card-text"><ul>
 
+                <li>Адрес: {{ venue.address }}</li>
+                <li>Индекс: {{ venue.zip_code }}</li>
+                <li>Контактный номер: {{ venue.phone }}</li>
+                
+            </ul></p>
+            {% if request.user.type != 'USER' %}
+
+              <a href="{% url 'update-venue' venue.id %}" class="btn btn-primary">Обновить</a>
+              <a href="{% url 'delete-venue' venue.id %}" class="btn btn-primary">Удалить</a>
+            {% endif %}
+            </div>
+          </div>
+        </br>
     {% endfor %}
+    
 
 {% endblock %}

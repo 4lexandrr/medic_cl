@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'bootstrap3',
     "bootstrap3_datetime", 
+    "django_unicorn",
+    'widget_tweaks',
+    'django_extensions',
 ]
 
 AUTH_USER_MODEL = 'base.User'
@@ -89,7 +92,7 @@ WSGI_APPLICATION = "medicine_clinic.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'db_med',
+        'NAME': 'med_db_2',
         'USER': 'postgres',
         'PASSWORD': 'Saha101603318',
         'HOST': 'localhost',
@@ -134,3 +137,10 @@ CART_SESSION_ID = 'cart'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+UNICORN = {
+    'MINIFIED': True,
+}
+
+if DEBUG:
+    import mimetypes
+    mimetypes.add_type("application/javascript", ".js", True)

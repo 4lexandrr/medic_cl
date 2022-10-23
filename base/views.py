@@ -1,22 +1,59 @@
+from pydoc import Doc, doc
+from urllib.request import Request
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import CreateView
 from django.views.generic import RedirectView
-from .models import Venue, Events, User, Tests
-from .forms import EventForm, VenueForm, MyUserCreationForm, ProfileForm, TestForm
+from .models import Venue, Events, User, Tests, Doctor, Reception, AvailableTime
+from .forms import EventForm, VenueForm, MyUserCreationForm, ProfileForm, TestForm, ReceptionForm
 # Create your views here.
+
+
+@login_required(login_url='login')
+def available_time(request, id):
+    date = request.POST['date']
+    times = AvailableTime.objects.filter(doctor__id=id, date=date, is_active=True)
+    context = {'times': times}
+    return render(request, 'base/available_time.html', context)
+
+
+@login_required(login_url='login')
+def reception(request, id):
+    form = ReceptionForm(request.POST)
+    doctor = Doctor.objects.get(id=id)
+    if request.method == 'POST':
+
+        if form.is_valid():
+            save = form.save(commit=False)
+            save.user = request.user
+            if Reception.objects.filter(time=save.time, date=save.date, doctor=save.doctor, user=save.user):
+                messages.error(request, 'Запись уже есть')
+                return redirect('doctor-list')
+            else:
+
+                save.save()
+                doctor = Doctor.objects.get(user=save.doctor.user)
+                doctor.receptions.add(save)
+                messages.success(request, 'Запись успешно добавлена!')
+                return redirect('doctor-list')
+        else:
+            messages.info(request, 'Ошибка формы')
+    
+    context = {'form': form, 'doctor': doctor, 'id': id}
+    return render(request, 'base/datetimepicker.html', context)
 
 
 def home(request):
     return render(request, 'base/home.html')
 
 
+@login_required(login_url='login')
 def doctors_list(request):
-    doctor_list = User.objects.all().filter(type='DOCTOR')
+    doctor_list = Doctor.objects.all()
     context = {'doctor_list': doctor_list}
     return render(request, 'base/doctors_list.html', context)
 
@@ -116,10 +153,11 @@ def delete_events(request, event_id):
     return render(request, 'base/delete.html', context)
 
 
-def all_tests(request):
-    test_list = Tests.objects.all()
-    context = {'test_list': test_list}
-    return render(request, 'base/all_tests.html', context)
+@login_required
+def cart(request):
+    products = Tests.objects.all()
+    context = {'products': products}
+    return render(request, 'base/cart.html', context)
 
 
 @login_required(login_url='login')

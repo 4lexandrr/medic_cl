@@ -1,0 +1,33 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<h1> Заполните необходимые поля </h1>
+<hr>
+<form action="/doctors/{{id}}/available_time" method=POST>
+    
+  {% if submitted %}
+      Анализ успешно добавлено!
+
+  {% else %}
+      {% csrf_token %}
+
+      <input id="id_date" name="date">
+
+  {% endif %}
+  <button type="submit" class="btn btn-outline-success"> Посмотреть доступное время </button>
+</form> 
+<div class="container">
+
+</div>
+{% endblock %}
+
+
+  {% block scripts %}
+  <script>
+    $(function () {
+      $("#id_date").datepicker();
+      })
+  </script>
+  {% endblock %}
+
+

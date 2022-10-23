@@ -4,7 +4,7 @@
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <br class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/">Главная</a>
@@ -20,10 +20,10 @@
             </a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="/doctors/">Записаться к доктору</a></li>
-              <li><a class="dropdown-item" href="/events/">Записаться на событие</a></li>
+              <!-- <li><a class="dropdown-item" href="/events/">Записаться на событие</a></li>
               {% if request.user.type != 'USER' %}
               <li><a class="dropdown-item" href="/add_events/">Добавить событие</a></li>
-              {% endif %}
+              {% endif %} -->
               <li><hr class="dropdown-divider"></li>
             </ul>
           </li>
@@ -32,7 +32,7 @@
               Анализы
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="/tests/">Анализы</a></li>
+              <li><a class="dropdown-item" href="/products/">Анализы</a></li>
               <li><a class="dropdown-item" href="/add_test/">Добавить анализ</a></li>
               <li><hr class="dropdown-divider"></li>
             </ul>
@@ -45,6 +45,8 @@
           <a class="nav-link" href="/login/">Авторизация</a>
           {% endif %}
         </div>
+      </br> 
+    </div>
         <form class="d-flex" role="search">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success" type="submit">Search</button>

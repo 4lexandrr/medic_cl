@@ -2,7 +2,23 @@ from dataclasses import field
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
-from .models import Events, Tests, Venue, User
+from .models import Events, Tests, Venue, User, Reception
+
+
+class ReceptionForm(ModelForm):
+    class Meta:
+        model = Reception
+        time = forms.TimeField(widget=forms.TimeInput(format='%H:%M'))
+        fields = ('user', 'doctor', 'date', 'time')  # Либо в () вводим нужные нам поля из модели
+
+        labels = {
+            'user': 'Клиент: ',
+            'doctor': 'Доктор: ',
+            'date': 'Дата: ',
+            'time': 'Время: '
+        }
+
+        
 
 
 class MyUserCreationForm(UserCreationForm):

@@ -1,0 +1,37 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<h1> Заполните необходимые поля </h1>
+<hr>
+
+<form action="" method=POST>
+    
+  {% if submitted %}
+      Анализ успешно добавлено!
+
+  {% else %}
+      {% csrf_token %}
+
+      <select class="form-select" aria-label="Default select example">
+        <option selected> Откройте меню для просмотра времени </option>
+        {% for time in times %}
+            <option value="{{time.time}}">{{ time.time }}</option>
+        {% endfor %}
+      </select>
+
+  {% endif %}
+  <button type="submit" class="btn btn-outline-success"> Записать </button>
+</form> 
+<div class="container">
+
+</div>
+{% endblock %}
+
+
+  {% block scripts %}
+  <script>
+    $(function () {
+      $("#id_date").datepicker();
+      })
+  </script>
+  {% endblock %}

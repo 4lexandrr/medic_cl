@@ -1,0 +1,50 @@
+<div>
+    <h1>Анализы</h1>
+    <hr>
+    <div class="container text-center">
+      <div class="row justify-content-start">
+        <div class="col-8">
+          {% for product in products %}
+          <div class="row">
+            <div class="col-sm-10">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">{{ product }}</h5>
+                  <p class="card-text">{{ product.description }}.</p>
+                  <p class="card-text">{{ product.cost }} Р</p>
+                  {% if request.user.type != 'USER' %}
+
+                      <a href="{% url 'update-test' product.id %}" class="btn btn-primary">Обновить</a>
+                      <a href="{% url 'delete-test' product.id %}" class="btn btn-primary">Удалить</a>
+                      <a class="btn btn-primary" unicorn:click="add_item( {{product.pk}})">Добавить в корзину</a>
+                  {% else %}
+                      <a class="btn btn-primary" unicorn:click="add_item( {{product.pk}})">Добавить в корзину</a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="col-4">
+          Корзина
+          {% if user_products %}
+              {% for product in user_products %}
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">{{ product.quantity }} x <b>{{ product.product.name }}</b> 
+                    {{ product.total_price }}Р
+                    <a class="btn btn-primary" unicorn:click="delete_item({{product.pk}})"> X </a>
+                  </li>
+                </ul>
+              {% endfor %}
+              <hr>
+              <div>
+                <p class="font-bold">ИТОГО {{ total }} Р</p>
+              </div>
+        </div>
+          {% else %}
+              В корзине ещё нет товаров.
+          {% endif %}
+        </div>
+    </div>
+</div>

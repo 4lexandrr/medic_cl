@@ -1,7 +1,10 @@
 from dataclasses import Field
 import datetime
 from doctest import DocTestRunner
+from http import client
 from operator import mod
+from pyexpat import model
+from random import choices
 from tabnanny import verbose
 from django.utils import timezone
 from email.policy import default
@@ -40,19 +43,20 @@ class User(AbstractUser):
     class Types(models.TextChoices):
         USER = 'USER', 'User'
         ADMIN = 'ADMIN', 'Admin'
+        DOCTOR = 'DOCTOR', 'Doctor'
     
 
-    username = models.CharField(max_length=50, default="Test")
+    username = models.CharField(max_length=50, default="username")
     type = models.CharField(max_length=255, choices=Types.choices, default=Types.USER)
     
-    first_name = models.CharField(max_length=255, default="Test")
-    middle_name = models.CharField(max_length=50, default="Test")
-    second_name = models.CharField(max_length=50, default="Test")
+    first_name = models.CharField(max_length=255, default="")
+    middle_name = models.CharField(max_length=50, default="")
+    second_name = models.CharField(max_length=50, default="")
     years = models.PositiveIntegerField(default=current_year(), validators=[MinValueValidator(1900), max_value_current_year])
-    email = models.EmailField(unique=True, default="Test")
-    polis = models.CharField(max_length=16, default="Test")
-    mobile_phone = models.CharField(max_length=18, validators=[telephone, MaxLengthValidator], default="Test")
-    registration_address = models.CharField(max_length=200, default="Test")
+    email = models.EmailField(unique=True, default="")
+    polis = models.CharField(max_length=16, default="")
+    mobile_phone = models.CharField(max_length=18, validators=[telephone, MaxLengthValidator], default="")
+    registration_address = models.CharField(max_length=200, default="")
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ['username']
@@ -126,11 +130,31 @@ class Events(models.Model):
 class Tests(models.Model):
     """ Класс тестов, на которые может быть записан пациент """
     name = models.CharField(max_length=100)
-    cost = models.CharField(max_length=100)
+    cost = models.DecimalField(
+        decimal_places=2,
+        max_digits=8,
+        validators=[MinValueValidator(0)]
+    )
     description = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
+
+
+class UserItem(models.Model):
+    product = models.ForeignKey(Tests, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default='')
+    quantity = models.PositiveIntegerField(default=1)
+    added = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def total_price(self):
+        return self.quantity * self.product.cost
+
+    def __str__(self):
+        return self.product.name
+
+    
 
 
 class Type_of_diagnoses(models.Model):
@@ -148,6 +172,34 @@ class Visits(models.Model):
     description = models.TextField(blank=True)
 
 
+class Type_of_user(models.TextChoices):
+    CLIENT = 'Пользователь'
+    Doctor_lor = 'ЛОР', 'Доктор-лор' 
+    Doctor_2 = 'Терапевт', 'Доктор-терапевт' 
 
 
+class Doctor(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    type = models.CharField(max_length=50, choices=Type_of_user.choices, default=Type_of_user.CLIENT)
+    details = models.CharField(max_length=255)
+    receptions = models.ManyToManyField('Reception', related_name='Receptions_booked_with_doctor')
 
+    def __str__(self):
+        return str(self.user)
+
+
+class Reception(models.Model):
+    user = models.ForeignKey(User.Types.USER, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    date = models.CharField(max_length=255)
+    time = models.TimeField()
+
+    def __str__(self):
+        return str(self.user)
+
+
+class AvailableTime(models.Model):
+    doctor = models.ManyToManyField(Doctor)
+    date = models.CharField(max_length=20)
+    time = models.TimeField()
+    is_active = models.BooleanField()
