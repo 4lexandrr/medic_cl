@@ -49,6 +49,7 @@ class ProfileForm(ModelForm):
         }
 
 
+
 class VenueForm(ModelForm):
     ''' Создаём класс VenueForm для отображения формы на сайте '''
     class Meta:

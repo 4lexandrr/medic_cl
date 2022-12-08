@@ -6,7 +6,7 @@
     <br>
     <h1>{{ user }}, {{user.years}} г. </h1>
     <hr>
-    <div style="text-align: right;"><a href="{% url 'update-profile' user.id %}" class="btn btn-outline-secondary btn-sm"> Обновить </a></div>
+    <div style="text-align: right;"><a href="{% url 'update-profile' user.id %}" class="btn btn-outline-dark btn-sm"> Обновить </a></div>
     <div>
         <h4> Медицинский полис: </h4>
         <h5> {{ user.polis }} </h5>

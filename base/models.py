@@ -15,7 +15,6 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import * 
 
 
-
 # Create your models here.
 
 
@@ -63,8 +62,7 @@ class User(AbstractUser):
 
     
     def __str__(self):
-        return self.last_name + ' ' + self.first_name + ' ' + self.middle_name
-
+        return self.middle_name + ' ' + self.first_name + ' ' + self.last_name
 
 class UserManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
@@ -154,7 +152,15 @@ class UserItem(models.Model):
     def __str__(self):
         return self.product.name
 
-    
+
+class Order(models.Model):
+    product = models.ForeignKey(Tests, on_delete=models.CASCADE)
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, default='')
+    quantity = models.IntegerField(default=1)
+    price = models.IntegerField()
+    date = models.DateField(default=datetime.datetime.today)
+    address = models.CharField(max_length=50, default='', blank=True)
+    phone = models.CharField(max_length=50, default='', blank=True)
 
 
 class Type_of_diagnoses(models.Model):

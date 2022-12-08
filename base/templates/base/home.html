@@ -4,13 +4,27 @@
 
     <h1>Домашняя страница</h1>
     {% if request.user.is_authenticated %}
-    <p> Здравствуйте,  {{request.user.first_name}}</p>
+        <p> Здравствуйте,  {{request.user.first_name}}</p>
+        <br>
+        <h1>Ваши заказы</h1>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success" role="alert">
+                {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+            {% for ord in order %}
+                Дата: {{ord.date}}, Адрес: {{ord.address}}.
+                {{ord.product}} - {{ord.quantity}}.
+                Стоимость заказа: {{ord.price}} Р
+                </br>
+            {% endfor %}
+
     {% endif %}
+
     <div>
-<!-- 
-        <div>
-            <a href="{% url 'user-profile' user.id %}">Личный кабинет</a>
-        </div> -->
         {% if request.user.type != 'USER' %}
         <div>
             <a href="{% url 'add-venue' %}">Добавить адрес</a>
@@ -20,9 +34,6 @@
         <div>
             <a href="{% url 'all-venue' %}">Посмотреть адреса</a>
         </div>
-        
-        
-
     </div>
 
 {% endblock %}

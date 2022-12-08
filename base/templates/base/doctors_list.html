@@ -6,10 +6,10 @@
     <hr>
     <div>
         {% for doctor in doctor_list %}
-            {% for cat in doctor.type %}
-            <h4> {{ doctor.type }}</h4>
-                <a href="{% url 'datetime' doctor.id %}"> {{ doctor }} </a>
-            {% endfor %}
+            <h5> {{doctor.type}}</h5>
+            <a href="{% url 'datetime' doctor.id %}"> {{ doctor }} </a>
         {% endfor %}
+        <br>
     </div>
+    <br>
 {% endblock %}

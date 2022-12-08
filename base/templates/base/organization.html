@@ -19,8 +19,7 @@
                 <li>Контактный номер: {{ venue.phone }}</li>
                 
             </ul></p>
-            {% if request.user.type != 'USER' %}
-
+            {% if request.user.type == 'ADMIN' %}
               <a href="{% url 'update-venue' venue.id %}" class="btn btn-primary">Обновить</a>
               <a href="{% url 'delete-venue' venue.id %}" class="btn btn-primary">Удалить</a>
             {% endif %}

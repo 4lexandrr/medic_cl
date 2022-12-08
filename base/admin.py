@@ -12,6 +12,7 @@ from base.models import Visits
 from base.models import Doctor
 from base.models import Reception
 from base.models import AvailableTime
+from base.models import Order
 
 
 
@@ -29,3 +30,5 @@ admin.site.register(Visits)
 admin.site.register(Doctor)
 admin.site.register(Reception)
 admin.site.register(AvailableTime)
+admin.site.register(Order)
+

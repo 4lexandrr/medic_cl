@@ -7,23 +7,21 @@
           {% for product in products %}
           <div class="row">
             <div class="col-sm-10">
-              <div class="card">
+              <div class="card" style="width: 50rem;">
                 <div class="card-body">
-                  <h5 class="card-title">{{ product }}</h5>
-                  <p class="card-text">{{ product.description }}.</p>
-                  <p class="card-text">{{ product.cost }} Р</p>
-                  {% if request.user.type != 'USER' %}
-
-                      <a href="{% url 'update-test' product.id %}" class="btn btn-primary">Обновить</a>
-                      <a href="{% url 'delete-test' product.id %}" class="btn btn-primary">Удалить</a>
-                      <a class="btn btn-primary" unicorn:click="add_item( {{product.pk}})">Добавить в корзину</a>
-                  {% else %}
-                      <a class="btn btn-primary" unicorn:click="add_item( {{product.pk}})">Добавить в корзину</a>
-                  {% endif %}
+                <h5 class="card-title">{{ product }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ product.cost }} Р</h6>
+                <p p class="card-text">{{ product.description }}.</p>
+                {% if request.user.type == 'ADMIN' %}
+                  <a href="{% url 'update-test' product.id %}" class="btn btn-outline-info">Обновить</a>
+                  <a href="{% url 'delete-test' product.id %}" class="btn btn-outline-danger">Удалить</a>
+                {% endif %}
+                <a class="btn btn-outline-success" unicorn:click="add_item( {{product.pk}})">Добавить в корзину</a>
                 </div>
               </div>
             </div>
           </div>
+          <br>
           {% endfor %}
         </div>
         <div class="col-4">
@@ -33,7 +31,7 @@
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item">{{ product.quantity }} x <b>{{ product.product.name }}</b> 
                     {{ product.total_price }}Р
-                    <a class="btn btn-primary" unicorn:click="delete_item({{product.pk}})"> X </a>
+                    <a class="btn btn-outline-danger" unicorn:click="delete_item({{product.pk}})"> X </a>
                   </li>
                 </ul>
               {% endfor %}
@@ -41,10 +39,45 @@
               <div>
                 <p class="font-bold">ИТОГО {{ total }} Р</p>
               </div>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Перейти к оплате
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Оплата</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="m-2 p-3">
+          <form action="/check_out" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="">Адрес</label>
+              <input type="text" name="adress" id="" class="form-control" placeholder="" aria-desctibedly="helpId">
+            </div>
+            <div class="form-group">
+              <label for="">Контактный телефон</label>
+              <input type="text" name="number" id="" class="form-control" placeholder="" aria-desctibedly="helpId">
+            </div>
+            <div class="modal-footer">
+              <input type="submit" class="btn btn-outline-info col-lg-6" value="Сохранить изменения">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
         </div>
           {% else %}
-              В корзине ещё нет товаров.
+              <p>В корзине ещё нет товаров.</p>
           {% endif %}
         </div>
     </div>
 </div>
+

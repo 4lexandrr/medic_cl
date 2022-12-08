@@ -6,9 +6,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
+from django.views import View
 from django.views.generic import CreateView
 from django.views.generic import RedirectView
-from .models import Venue, Events, User, Tests, Doctor, Reception, AvailableTime
+from .models import Venue, Events, User, Tests, Doctor, Reception, AvailableTime, UserItem, Order
 from .forms import EventForm, VenueForm, MyUserCreationForm, ProfileForm, TestForm, ReceptionForm
 # Create your views here.
 
@@ -26,7 +27,6 @@ def reception(request, id):
     form = ReceptionForm(request.POST)
     doctor = Doctor.objects.get(id=id)
     if request.method == 'POST':
-
         if form.is_valid():
             save = form.save(commit=False)
             save.user = request.user
@@ -48,7 +48,16 @@ def reception(request, id):
 
 
 def home(request):
-    return render(request, 'base/home.html')
+    if request.user.is_authenticated == True:
+        order = Order.objects.filter(customer=request.user)
+        context = {
+            'order': order,
+        }
+    else:
+        context = {
+            'order': '',
+        }
+    return render(request, 'base/home.html', context=context)
 
 
 @login_required(login_url='login')
@@ -153,7 +162,6 @@ def delete_events(request, event_id):
     return render(request, 'base/delete.html', context)
 
 
-@login_required
 def cart(request):
     products = Tests.objects.all()
     context = {'products': products}
@@ -185,18 +193,18 @@ def update_test(request, test_id):
 
     if form.is_valid():
         form.save()
-        return redirect('all-tests')
+        return redirect('products')
 
     return render(request, 'base/update_test.html', context)
 
 
 @login_required(login_url='login')
 def delete_test(request, test_id):
-    test = Events.objects.get(pk=test_id)
+    test = Tests.objects.get(pk=test_id)
     context = {'obj': test}
     if request.method == 'POST':
         test.delete()
-        return redirect('all-tests')
+        return redirect('products')
 
     return render(request, 'base/delete.html', context)
 
@@ -271,7 +279,20 @@ def registerPage(request):
     return render(request, 'base/login_register.html', {'form': form}) 
 
 
-    
+@login_required(login_url='login')
+def order(request):
+    if request.method == 'POST':
+        adress = request.POST.get('adress')
+        number = request.POST.get('number')
+        user = request.user
+        items = UserItem.objects.filter(user=user)
+        for item in items:
+            el = Tests.objects.get(name=item)
+            Order.objects.create(product=el, customer=user, quantity=item.quantity, 
+                                 price=item.total_price, address=adress, phone=number)
+            UserItem.objects.get(product=el, user=user).delete()
+        messages.success(request, ('Заказ подтвержден'))
+        return redirect('/')
 
 
 
